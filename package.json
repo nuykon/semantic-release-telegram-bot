@@ -1,8 +1,11 @@
 {
-	"name": "semantic-release-telegram-bot",
-	"version": "1.0.0",
+	"name": "@nuykon/semantic-release-telegram-bot",
+	"version": "1.0.1",
 	"description": "A telegram bot for semantic-release library notifying release statuses",
 	"main": "lib/index.js",
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"test": "nyc -e .ts -x \"*.spec.ts\" jasmine-ts \"**/*.spec.ts\"",
 		"lint": "eslint",
