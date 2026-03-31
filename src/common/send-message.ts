@@ -1,11 +1,16 @@
 import {TGBotRenderedMessage} from '../interfaces/rendered-message';
 import * as semantic from 'semantic-release';
-import {TG_BOT_TOKEN_ENV} from './constants';
+import {TG_BOT_TOKEN_ENV, TG_BOT_PROXY_ENV} from './constants';
 import * as TelegramBot from 'node-telegram-bot-api';
 
 export async function sendMessage(message: TGBotRenderedMessage, chatId: string | number, {logger}: semantic.Context): Promise<void> {
 	const token: string | undefined = process.env[TG_BOT_TOKEN_ENV]
-	const bot = new TelegramBot(token, {polling: false});
+	const bot = new TelegramBot(token, {
+		polling: false,
+		request: {
+			proxy: process.env[TG_BOT_PROXY_ENV]
+		}
+	});
 
 	logger.log(`Sending message to telegram chat (id=${chatId})...`);
 
