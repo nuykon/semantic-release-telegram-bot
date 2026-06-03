@@ -1,6 +1,6 @@
 {
 	"name": "@nuykon/semantic-release-telegram-bot",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A telegram bot for semantic-release library notifying release statuses",
 	"main": "lib/index.js",
 	"publishConfig": {
@@ -61,7 +61,7 @@
 		"@semantic-release/error": "^2.2.0",
 		"lodash": "^4.17.21",
 		"micromatch": "^4.0.4",
-		"node-telegram-bot-api": "^0.54.0",
+		"node-telegram-bot-api": "^0.67.0",
 		"nunjucks": "^3.2.3",
 		"telegramify-markdown": "^1.0.3"
 	}
