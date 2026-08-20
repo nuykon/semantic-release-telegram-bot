@@ -17,13 +17,6 @@ describe('Render message', () => {
 			expect(renderedMessage.format).toBe('markdown');
 		});
 
-		it('Message should escape closing angle brackets parsed as raw HTML', async () => {
-			const renderedMessage: TGBotRenderedMessage = renderMessage({message: 'Support Array<T> values'});
-
-			expect(renderedMessage.message).toBe('Support Array<T\\> values');
-			expect(renderedMessage.format).toBe('markdown');
-		});
-
 		it('Message should preserve a release link and section heading after an unsupported small tag', async () => {
 			const renderedMessage: TGBotRenderedMessage = renderMessage({
 				message: [

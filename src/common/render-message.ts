@@ -24,10 +24,6 @@ export function renderMessage(message: TGBotMessage | TGBotMessageTemplate, cont
 
 function renderMarkdown(message: string): string {
 	return telegramifyMarkdown(stripUnsupportedHtml(message))
-		// remark treats strings such as `Array<T>` as raw HTML and skips
-		// MarkdownV2 escaping. Telegram still requires the closing bracket to
-		// be escaped, otherwise the entire message is rejected.
-		.replace(/<[^>\n]*>/g, rawHtml => rawHtml.replace(/>/g, '\\>'))
 		.trim();
 }
 
