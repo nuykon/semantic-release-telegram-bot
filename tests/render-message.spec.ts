@@ -23,6 +23,27 @@ describe('Render message', () => {
 			expect(renderedMessage.message).toBe('Support Array<T\\> values');
 			expect(renderedMessage.format).toBe('markdown');
 		});
+
+		it('Message should preserve a release link and section heading after an unsupported small tag', async () => {
+			const renderedMessage: TGBotRenderedMessage = renderMessage({
+				message: [
+					'<small>[3.7.6](https://gitlab.example/repository/-/releases/v3.7.6) (2026-08-20)</small>',
+					'',
+					'### ♻️ Рефакторинг:',
+					'',
+					'* refactor: update dependencies ([726a6a2](https://gitlab.example/repository/-/commit/726a6a2))'
+				].join('\n')
+			});
+
+			expect(renderedMessage.message).toBe([
+				'[3\\.7\\.6](https://gitlab.example/repository/-/releases/v3.7.6) \\(2026\\-08\\-20\\)',
+				'',
+				'*♻️ Рефакторинг:*',
+				'',
+				'•   refactor: update dependencies \\([726a6a2](https://gitlab.example/repository/-/commit/726a6a2)\\)'
+			].join('\n'));
+			expect(renderedMessage.format).toBe('markdown');
+		});
 	})
 
 	describe('HTML', () => {

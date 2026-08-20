@@ -23,12 +23,19 @@ export function renderMessage(message: TGBotMessage | TGBotMessageTemplate, cont
 }
 
 function renderMarkdown(message: string): string {
-	return telegramifyMarkdown(message)
+	return telegramifyMarkdown(stripUnsupportedHtml(message))
 		// remark treats strings such as `Array<T>` as raw HTML and skips
 		// MarkdownV2 escaping. Telegram still requires the closing bracket to
 		// be escaped, otherwise the entire message is rejected.
 		.replace(/<[^>\n]*>/g, rawHtml => rawHtml.replace(/>/g, '\\>'))
 		.trim();
+}
+
+function stripUnsupportedHtml(message: string): string {
+	// semantic-release changelog presets may wrap a Markdown release link in
+	// <small>. MarkdownV2 does not support HTML, and leaving the wrapper in
+	// place prevents the nested link from being rendered correctly.
+	return message.replace(/<\/?small\s*>/gi, '');
 }
 
 function renderFromTemplate(template: TGBotMessageTemplate, context: Record<string, unknown>): string {
