@@ -8,10 +8,11 @@ import * as telegramifyMarkdown from 'telegramify-markdown';
 
 export function renderMessage(message: TGBotMessage | TGBotMessageTemplate, context: Record<string, unknown> = {}): TGBotRenderedMessage {
 	if (isMessage(message)) {
-		const templated: string = template(message.message)({...context, ...message.customData})
+		const templated: string = template(message.message)({...context, ...message.customData});
+		const format = message.format ?? 'markdown';
 		return {
-			message: telegramifyMarkdown(templated).trim(),
-			format: message.format ?? 'markdown'
+			message: format === 'html' ? templated.trim() : renderMarkdown(templated),
+			format
 		}
 	} else {
 		return {
@@ -19,6 +20,15 @@ export function renderMessage(message: TGBotMessage | TGBotMessageTemplate, cont
 			format: extname(message.path) === '.html' ? 'html' : 'markdown'
 		}
 	}
+}
+
+function renderMarkdown(message: string): string {
+	return telegramifyMarkdown(message)
+		// remark treats strings such as `Array<T>` as raw HTML and skips
+		// MarkdownV2 escaping. Telegram still requires the closing bracket to
+		// be escaped, otherwise the entire message is rejected.
+		.replace(/<[^>\n]*>/g, rawHtml => rawHtml.replace(/>/g, '\\>'))
+		.trim();
 }
 
 function renderFromTemplate(template: TGBotMessageTemplate, context: Record<string, unknown>): string {

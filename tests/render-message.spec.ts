@@ -16,6 +16,13 @@ describe('Render message', () => {
 			expect(renderedMessage.message).toBe('*Title*\nContent');
 			expect(renderedMessage.format).toBe('markdown');
 		});
+
+		it('Message should escape closing angle brackets parsed as raw HTML', async () => {
+			const renderedMessage: TGBotRenderedMessage = renderMessage({message: 'Support Array<T> values'});
+
+			expect(renderedMessage.message).toBe('Support Array<T\\> values');
+			expect(renderedMessage.format).toBe('markdown');
+		});
 	})
 
 	describe('HTML', () => {
@@ -30,6 +37,13 @@ describe('Render message', () => {
 			const renderedMessage: TGBotRenderedMessage = renderMessage({message: '<b>${title}</b>\n${content}', format: 'html'}, {title: 'Title', content: 'Content'});
 
 			expect(renderedMessage.message).toBe('<b>Title</b>\nContent');
+			expect(renderedMessage.format).toBe('html');
+		});
+
+		it('Message should not convert HTML links as Markdown', async () => {
+			const renderedMessage: TGBotRenderedMessage = renderMessage({message: '<a href="https://example.com?a=1&b=2">Link</a>', format: 'html'});
+
+			expect(renderedMessage.message).toBe('<a href="https://example.com?a=1&b=2">Link</a>');
 			expect(renderedMessage.format).toBe('html');
 		});
 	})
